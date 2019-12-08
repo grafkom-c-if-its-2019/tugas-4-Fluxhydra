@@ -201,14 +201,64 @@
     var xAxis = 0.0, yAxis = 0.0, zAxis = 0.0;
     var thetaSpeed = 0.0;
 
-    // Keyboard interaction
+    // Keyboard interaction: Character '-', '=' and '0'
     function onKeyDown(event) 
     {
-      if (event.keyCode == 189) thetaSpeed -= 0.005;      // Character '-'
-      else if (event.keyCode == 187) thetaSpeed += 0.005; // Character '='
-      else if (event.keyCode == 48) thetaSpeed = 0;       // Character '0'
+      if (event.keyCode == 189) thetaSpeed -= 0.005;     
+      else if (event.keyCode == 187) thetaSpeed += 0.005; 
+      else if (event.keyCode == 48) thetaSpeed = 0;     
     }
     document.addEventListener('keydown', onKeyDown);
+
+    // Mouse interactions
+    var lastx, lasty, dragging;
+
+    // Press the left click
+    function onMouseDown(event)
+    {
+      var x = event.clientX;
+      var y = event.clientY;
+      var rect = event.target.getBoundingClientRect();
+      if 
+      (
+        rect.left <= x &&
+        rect.right > x &&
+        rect.top <= y &&
+        rect.bottom > y
+      ) 
+      {
+        lastx = x;
+        lasty = y;
+        dragging = true;
+      }
+    }
+
+    // Release
+    function onMouseUp(event)
+    {
+      dragging = false;
+    }
+
+    // Move
+    function onMouseMove(event)
+    {
+      var x = event.clientX;
+      var y = event.clientY;
+      if (dragging) 
+      {
+        var factor = 5 / canvas.height;
+        var dx = factor * (x - lastx);  // Horizonal
+        var dy = factor * (y - lasty);  // Vertical
+        theta[xAxis] += dy;
+        theta[yAxis] += dx;
+      }
+      lastx = x;
+      lasty = y;
+    }
+
+    document.addEventListener('mousedown', onMouseDown);
+    document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('mousemove', onMouseMove);
 
     // Set the view matrix
     var vmLoc = gl.getUniformLocation(program, 'viewMatrix');
