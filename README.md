@@ -5,6 +5,6 @@ Timeline Tugas 4:
 3. Atur foto sebagai texture kubus [OK].
 4. Pencahayaan dari huruf A, tipe: ambient, diffuse, specular.
 5. Ambient color NRP 164087 (R = 0.16, G = 0.40, B = 0.87) [OK].
-6. Orbital control menggunakan mouse.
+6. Orbital control menggunakan mouse [OK].
  
-Status: [6]
+Status: [4]
