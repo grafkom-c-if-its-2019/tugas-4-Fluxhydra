@@ -17,16 +17,25 @@ void main()
 
   // Incoming light and normal vector (degree), get the cos value
   vec3 lightDirection = normalize(lightPosition - fPosition);
-  float lightIntensity = max(dot(lightDirection, normal), 0.0);
+  float diffuseIntensity = max(dot(lightDirection, normal), 0.0);
+
+  // Reflect the vector accross normal space
+  vec3 from_light_dir = normalize(fPosition - lightPosition);  
+  vec3 reflection_dir = reflect(from_light_dir, normal);
+  vec3 camera_dir = normalize(vec3(1.0, 1.0, 1.0));
+  float specIntensity = dot(reflection_dir, camera_dir);
 
   // Get texture colors 
   vec4 tex0 = texture2D(sampler0, fTexCoord);
 
-  // Get diffusion from light and material interactions
-  vec3 diffuse = lightColor * tex0.rgb * lightIntensity;
+  // Get diffuse value
+  vec3 diffuse = lightColor * tex0.rgb * diffuseIntensity;
 
   // Get ambient value
   vec3 ambient = ambientColor * tex0.rgb;
-  
-  gl_FragColor = vec4(diffuse + ambient, 1.0);
+
+  // Get specular value
+  vec3 specular = lightColor * tex0.rgb * specIntensity;
+
+  gl_FragColor = vec4(diffuse + ambient + specular, 1.0);
 }

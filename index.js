@@ -285,13 +285,13 @@
     );
     gl.uniformMatrix4fv(pmLoc, false, pm);
 
-    // Set the lightning: color, position, ambient
+    // Set the lighting: color, position, ambient
     var lightColorLoc = gl.getUniformLocation(program, 'lightColor');
     var lightColor = [1.0, 1.0, 1.0];
     gl.uniform3fv(lightColorLoc, lightColor);
 
     var lightPositionLoc = gl.getUniformLocation(program, 'lightPosition');
-    var lightPosition = glMatrix.vec3.fromValues(0.5, 4.0, 3.0);
+    var lightPosition = glMatrix.vec3.fromValues(0.0, 0.0, 0.0);
     gl.uniform3fv(lightPositionLoc, lightPosition);
 
     var ambientColorLoc = gl.getUniformLocation(program, 'ambientColor');
