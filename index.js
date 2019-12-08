@@ -235,6 +235,19 @@
     );
     gl.uniformMatrix4fv(pmLoc, false, pm);
 
+    // Set the lightning: color, position, ambient
+    var lightColorLoc = gl.getUniformLocation(program, 'lightColor');
+    var lightColor = [1.0, 1.0, 1.0];
+    gl.uniform3fv(lightColorLoc, lightColor);
+
+    var lightPositionLoc = gl.getUniformLocation(program, 'lightPosition');
+    var lightPosition = glMatrix.vec3.fromValues(0.5, 4.0, 3.0);
+    gl.uniform3fv(lightPositionLoc, lightPosition);
+
+    var ambientColorLoc = gl.getUniformLocation(program, 'ambientColor');
+    var ambientColor = glMatrix.vec3.fromValues(0.16, 0.40, 0.87);
+    gl.uniform3fv(ambientColorLoc, ambientColor);
+
     var nmLoc = gl.getUniformLocation(program, 'normalMatrix');
     
     function render()
@@ -315,6 +328,29 @@
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
+
+    // Create a texture
+    var texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    // Fill the texture with a 1x1 blue pixel
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+      new Uint8Array([0, 0, 255, 255]));
+
+    gl.activeTexture(gl.TEXTURE0);
+    var sampler0Loc = gl.getUniformLocation(program, 'sampler0');
+    gl.uniform1i(sampler0Loc, 0);
+
+    // Asynchronously load an image
+    var image = new Image();
+    image.src = "images/Ihatecameras.png";
+    image.addEventListener('load', function() 
+    {
+      // Now that the image has been loaded, make some copies of it to the texture
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+      gl.generateMipmap(gl.TEXTURE_2D);
+    });
 
     render();
   }
